@@ -6,6 +6,8 @@ import { Table, TableWrapper, Row } from 'react-native-table-component';
 import { useSelector,useDispatch } from 'react-redux';
 import { carryOutPurchase, setMiningForce } from '../store/actions';
 
+
+
 const screenWidth = Dimensions.get('window').width - 40
 
 
@@ -13,6 +15,7 @@ function ShopScreen() {
     const [width, setWidth] = useState([screenWidth/2, screenWidth/2])
     const balance = useSelector(state => state.balance)
     const dispatch = useDispatch()
+
 
     const tableData = [
         ['0.00001mBTC/s','0.00006BTC'],

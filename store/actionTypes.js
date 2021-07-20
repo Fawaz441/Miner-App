@@ -1,3 +1,6 @@
 export const SET_BALANCE = 'SET_BALANCE'
 export const SET_MINING_FORCE = 'SET_MINING_FORCE'
 export const CARRY_OUT_PURCHASE = 'CARRY_OUT_PURCHASE'
+export const IS_SIGNING_UP = 'IS_SIGNING_UP'
+export const SET_REFERRER = 'SET_REFERRER'
+export const SET_USER_INFO = 'SET_USER_INFO'

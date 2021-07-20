@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff00"
-      }
+      },
+      "package": "com.fawaz441.miner"
     },
     "web": {
       "favicon": "./assets/icon.png"

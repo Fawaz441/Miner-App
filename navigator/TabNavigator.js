@@ -19,7 +19,7 @@ const inactiveColor = "rgba(0,0,0,0.4)"
 const hideNav = (navigation) => {
     var tabBarVisible = true;
     const routeName = navigation.state.routes[navigation.state.index].routeName
-    if (routeName == "Settings" || routeName == "Wallet") {
+    if (routeName == "Settings" || routeName == "Wallet" || routeName == "Signup") {
         tabBarVisible = false
     }
     return tabBarVisible
@@ -28,7 +28,7 @@ const hideNav = (navigation) => {
 const HomeStack = createStackNavigator({
     Dashboard: HomeScreen,
     Settings: Settings,
-    Wallet: WalletScreen
+    Wallet: WalletScreen,
 }, {
     headerMode: 'none',
     mode: "modal",
@@ -36,6 +36,7 @@ const HomeStack = createStackNavigator({
 
 
 HomeStack.navigationOptions = ({ navigation }) => {
+    const routeName = navigation.state.routes[navigation.state.index].routeName
     var tabBarVisible = hideNav(navigation)
     return ({
         tabBarVisible,

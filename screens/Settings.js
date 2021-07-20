@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet, View, Text, ScrollView } from 'react-native'
 import Nav from '../components/TopNav'
 import { Container } from '../styles/MainStyles'
-import RNPickerSelect from 'react-native-picker-select';
-
+// import RNPickerSelect from 'react-native-picker-select';
+import { useSelector } from 'react-redux';
 
 const Settings = () => {
-    const [Bank,setBank] = useState('male')
+    const {email,bank,
+        account_number,
+        account_name,
+        referral_code} = useSelector(state => state.user_info)
+
+
     return (
         <Container>
             <Nav hideHam={true}/>
@@ -14,7 +19,7 @@ const Settings = () => {
                 <View style={styles.list}>
                     <View style={styles.field}>
                         <Text style={styles.fieldText}>UserName :</Text>
-                        <Text style={styles.fieldText}>John Doe</Text>
+                        <Text style={styles.fieldText}>{account_name||''}</Text>
                     </View>
                     <View style={styles.field}>
                         <Text style={styles.fieldText}>Password :</Text>
@@ -22,21 +27,24 @@ const Settings = () => {
                     </View>
                     <View style={styles.field}>
                         <Text style={styles.fieldText}>Email :</Text>
-                        <Text style={[styles.fieldText, { fontSize: 12 }]}>annualincome@yahoo.com</Text>
+                        <Text style={[styles.fieldText, { fontSize: 12 }]}>{email||''}</Text>
                     </View>
 
                     <View style={styles.field}>
                         <Text style={styles.fieldText}>Account Number</Text>
-                        <Text style={styles.fieldText}>0202002020</Text>
+                        <Text style={styles.fieldText}>{account_number||''}</Text>
                     </View>
                     <View style={styles.field}>
                         <Text style={styles.fieldText}>Account Name</Text>
-                        <Text style={styles.fieldText}>King AAA</Text>
+                        <Text style={styles.fieldText}>{account_name||''}</Text>
                     </View>
-                    <View style={[styles.field,{flex:1}]}>
+                    <View style={[styles.field]}>
                         <Text style={styles.fieldText}>Bank</Text>
-                        <View style={{width:120}}>
-                        <RNPickerSelect
+                        <Text style={styles.fieldText}>{bank||''}</Text>
+
+                        {/* <View style={{width:120}}> */}
+
+                        {/* <RNPickerSelect
                             placeholder={{}}
                             onValueChange={(value) => setBank(value)}
                             items={[
@@ -45,8 +53,8 @@ const Settings = () => {
                             ]}
                             value={Bank}
                             style={{fontWeight:200,fontFamily:'Poppins_400Regular'}}
-                        />
-                        </View>
+                        /> */}
+                        {/* </View> */}
                     </View>
                 </View>
                 <View style={styles.cards}>

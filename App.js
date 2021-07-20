@@ -1,11 +1,13 @@
 import { Poppins_400Regular, useFonts } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
-import React,{useEffect} from 'react';
-import TabNavigator from './navigator/TabNavigator';
-import { Provider, useSelector } from 'react-redux';
+import React from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk'
 import reducer from './store/reducer'
+import Navigator from './Navigator';
+import FlashMessage from "react-native-flash-message";
+import { Provider } from 'react-redux';
+
 
 
 
@@ -21,7 +23,8 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <TabNavigator />
+      <Navigator />
+      <FlashMessage position="top"/>
     </Provider>
   );
 }

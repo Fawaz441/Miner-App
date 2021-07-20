@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View,Image } from 'react-native'
 
+
 const playIcon = require('../assets/icons/play.png')
 const pauseIcon = require('../assets/icons/pause.png')
 
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
 
 export const Container = (props)  => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,props.isForm && {justifyContent: "space-around"}]}>
             {props.children}
         </View>
     )

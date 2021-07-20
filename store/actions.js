@@ -1,10 +1,10 @@
-import { MINING_FORCE, BALANCE, newUserMiningForce,newUserBalance } from "./constants"
+import { MINING_FORCE, BALANCE, newUserMiningForce,newUserBalance, ERRORS, USER_INFO } from "./constants"
 import { checkItem, getItem, storeItem } from "./storage"
 import * as actionTypes from './actionTypes'
 import { Alert } from "react-native"
+import axios from "../api/axios"
 
 export const setBalance = amount => {
-    console.log('ajaj', amount)
     return {
         type: actionTypes.SET_BALANCE,
         balance: amount
@@ -71,5 +71,48 @@ export const carryOutPurchase = price => {
     return {
         type: actionTypes.CARRY_OUT_PURCHASE,
         price: price
+    }
+}
+
+// auth
+export const signup = payload => async (dispatch) =>{
+    dispatch({type:actionTypes.IS_SIGNING_UP})
+    axios.post('/signup/',payload)
+    .then(res => {
+        if(res.data.user_info){
+            dispatch({
+                type:'IS_AUTHENTICATED',
+            })
+            dispatch(setUserInfo(res.data.user_info))
+        }
+        if(res.data.errors){
+            dispatch({
+                type:ERRORS,
+                error:JSON.stringify(res.data.errors)
+            })
+        }
+    })
+    .catch(err => {
+        dispatch({
+            type:ERRORS,
+            error:'Errors signing up'
+        })
+    })
+}
+
+
+export const setUserInfo = info => async (dispatch) => {
+    dispatch({
+        type:actionTypes.SET_USER_INFO,
+        info:info
+    })
+    storeItem(USER_INFO,info)
+}
+
+
+export const addPayment = amount => {
+    return {
+        type:'ADD_PAYMENT',
+        amount:amount
     }
 }
