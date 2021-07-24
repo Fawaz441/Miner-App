@@ -4,17 +4,73 @@ import Nav from '../components/TopNav';
 import { Card, Container, Player, SmallerText } from "../styles/MainStyles";
 import { loadMiningForce, setBalance, loadBalance, addPayment } from '../store/actions'
 import { connect } from 'react-redux';
-import { BALANCE } from '../store/constants';
-import { storeItem } from '../store/storage';
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { BALANCE, FOCUSED, MINING_FORCE } from '../store/constants';
+import { checkItem, getItem, storeItem } from '../store/storage';
+import { showMessage } from "react-native-flash-message";
 import axios from '../api/axios';
+import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
+
+const BACKGROUND_FETCH_TASK = 'miner';
+
+TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+    var speed = await getItem(MINING_FORCE)
+    var balance = await getItem(BALANCE)
+    var result = 0;
+    storeItem(FOCUSED,false)
+    if(checkItem(balance)){
+        if (checkItem(speed)){
+            result = parseFloat((Number((speed / 1000) * 60) + Number(balance)).toFixed(8))
+            storeItem(BALANCE,result)
+        }
+    }
+    console.log(`New Result , ${result}`);
+    console.log(speed)
+    console.log(balance)
+    // Be sure to return the successful result type!
+    return BackgroundFetch.Result.NewData;
+  });
+
+  async function registerBackgroundFetchAsync() {
+    return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+      minimumInterval: 1, // 1 second
+      stopOnTerminate: true, // android only,
+      startOnBoot: false, // android only
+    });
+  }
+
+  async function unregisterBackgroundFetchAsync() {
+    return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+  }
+
+  
 
 
 class HomeScreen extends React.Component {
 
     state = {
         play: false,
+        status:'',
+        isRegistered:false
     }
+
+
+    checkStatusAsync = async () => {
+        const status = await BackgroundFetch.getStatusAsync();
+        const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
+        this.setState({status:status,isRegistered:isRegistered})
+        console.log('is Registered',isRegistered)
+      };
+
+    startFetchTask = async (start) => {
+        if (!start) {
+          await unregisterBackgroundFetchAsync();
+        } else {
+          await registerBackgroundFetchAsync();
+        }
+    
+        this.checkStatusAsync();
+      };
 
     getPayments = () => {
         const {id} = this.props;
@@ -35,26 +91,30 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
+        storeItem(FOCUSED,true)
         if(!this.props.id){
             this.props.navigation.push('Signup')
             return;
         }
         this.intervalId = React.createRef(null)
         this.props.loadMiningForce()
-        this.props.loadBalance()
+        // this.props.loadBalance()
         this.getPayments()
+        this.checkStatusAsync()
+
     }
 
 
 
-    handlePlayFlow = () => {
-        const { intervalId } = this;
+    handlePlayFlow = async () => {
+        const {intervalId} = this;
         const { play } = this.state;
-
         if (play) {
             const { balance } = this.props;
             clearInterval(intervalId.current)
             storeItem(BALANCE, balance)
+            this.setState({ play: false })
+            await this.startFetchTask(false)
             
         }
         else {
@@ -64,11 +124,14 @@ class HomeScreen extends React.Component {
                     var sum = parseFloat((Number(miningForce / 1000) + Number(balance)).toFixed(8))
                     if (sum > Number(balance)) {
                         this.props.setBalance(sum)
+                        storeItem(BALANCE, sum)
                     }
                 }
             }, 1000)
+            this.setState({ play: true })
+            await this.startFetchTask(true)
+
         }
-        this.setState({ play: !play })
     }
 
     render() {

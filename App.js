@@ -4,7 +4,7 @@ import React from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk'
 import reducer from './store/reducer'
-import Navigator from './Navigator';
+import Navigator from './navigator/Navigator';
 import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux';
 

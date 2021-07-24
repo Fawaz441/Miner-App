@@ -20,4 +20,13 @@ export const getItem = async (value) => {
       }
 }
 
+export const removeItem = async (name) => {
+    try{
+        await AsyncStorage.removeItem(name)
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export const checkItem = value => (value !== null && value !== undefined)

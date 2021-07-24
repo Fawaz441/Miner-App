@@ -70,7 +70,9 @@ const styles = StyleSheet.create({
 
 export const Container = (props)  => {
     return (
-        <View style={[styles.container,props.isForm && {justifyContent: "space-around"}]}>
+        <View style={[styles.container,
+            props.isFlex && {justifyContent:'center',alignItems:'center'},
+            props.isForm && {justifyContent: "space-around"}]}>
             {props.children}
         </View>
     )

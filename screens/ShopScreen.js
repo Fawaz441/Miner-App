@@ -13,7 +13,7 @@ const screenWidth = Dimensions.get('window').width - 40
 
 function ShopScreen() {
     const [width, setWidth] = useState([screenWidth/2, screenWidth/2])
-    const balance = useSelector(state => state.balance)
+    const {balance,miningForce} = useSelector(state => state)
     const dispatch = useDispatch()
 
 
@@ -37,7 +37,7 @@ function ShopScreen() {
         }
         else{
             dispatch(carryOutPurchase(price))
-            dispatch(setMiningForce(force))
+            dispatch(setMiningForce((Number(force)+Number(miningForce)).toFixed(5)))
         }
     }
 

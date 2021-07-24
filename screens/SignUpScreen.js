@@ -13,9 +13,9 @@ import { SET_USER_INFO } from '../store/actionTypes'
 
 const SignupScreen = () => {
 
-    const [oldUser,setOldUser] = useState(true)
+    const [oldUser,setOldUser] = useState(false)
     const dispatch = useDispatch()
-    const {user_info,isSigningUp,authenticated} = useSelector(state => state)
+    const {isSigningUp} = useSelector(state => state)
     const [first_name, setFirstName] = useState(null)
     const [last_name, setLastName] = useState(null)
     const [account_name, setAccountName] = useState(null)
@@ -24,26 +24,11 @@ const SignupScreen = () => {
     const [referral_code, setRefCode] = useState(null)
     const [password,setPassword] = useState(null)
     const [email,setEmail] = useState(null)
+    const [username,setUsername] = useState(null)
 
 
 
-    useEffect(() => {
-        getItem(USER_INFO)
-        .then(res => {
-            if(checkItem(res)){
-                dispatch({
-                    type:SET_USER_INFO,
-                    info:res
-                })
-            }
-            else{
-                setOldUser(false)
-            }
-        })
-        .catch(e => {
-            console.log(e)
-        })
-    },[])
+    
 
   
     const signUp = () => {
@@ -53,6 +38,10 @@ const SignupScreen = () => {
 
         if (first_name === '' || first_name === null) {
             showMessage({ message: 'First Name is required', type: 'danger' })
+            return;
+        }
+        if (username === '' || username === null) {
+            showMessage({ message: 'Username is required', type: 'danger' })
             return;
         }
         if (last_name === '' || last_name === null) {
@@ -90,7 +79,8 @@ const SignupScreen = () => {
             bank,
             referral_code,
             email,
-            password
+            password,
+            username
         }
 
         dispatch(signup(payload))
@@ -124,6 +114,13 @@ const SignupScreen = () => {
                                 <TextInput style={styles.loginInput}
                                     value={last_name}
                                     onChangeText={value => setLastName(value)}
+                                />
+                            </View>
+                            <View style={styles.loginGroup}>
+                                <Text style={styles.loginText}>Username</Text>
+                                <TextInput style={styles.loginInput}
+                                    value={username}
+                                    onChangeText={value => setUsername(value)}
                                 />
                             </View>
                             <View style={styles.loginGroup}>
@@ -170,6 +167,7 @@ const SignupScreen = () => {
                                     onChangeText={value => setRefCode(value)}
                                 />
                             </View>
+                            <View style={styles.loginGroup}/>
                             <View style={styles.loginGroup}>
                                 <TouchableOpacity onPress={signUp}>
                                     <View style={styles.cta}>

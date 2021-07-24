@@ -3,6 +3,7 @@ import { checkItem, getItem, storeItem } from "./storage"
 import * as actionTypes from './actionTypes'
 import { Alert } from "react-native"
 import axios from "../api/axios"
+import { showMessage } from "react-native-flash-message"
 
 export const setBalance = amount => {
     return {
@@ -62,8 +63,8 @@ export const setMiningForce = force => {
                     type: actionTypes.SET_MINING_FORCE,
                     miningForce: force
                 })
+                Alert.alert('Success', `Your mining force is now ${force}mBTC/s`)
             })
-        Alert.alert('Success', `Your mining force is now ${force}mBTC/s`)
     }
 }
 
@@ -100,6 +101,35 @@ export const signup = payload => async (dispatch) =>{
     })
 }
 
+export const login = payload => async (dispatch) =>{
+    dispatch({type:actionTypes.IS_LOGGING_IN})
+    const {username,password} = payload
+    axios.get(`/login?username=${username}&password=${password}`)
+    .then(res => {
+        console.log(res.data)
+        if(res.data.error){
+            showMessage({ message:'Error', description:'Error Logging in', type:'danger' })
+            dispatch({
+                type:ERRORS,
+                error:'Errors'
+        })}
+        else{
+            dispatch({
+                type:'IS_AUTHENTICATED',
+            })
+            dispatch(setUserInfo(res.data))
+        }
+    })
+    .catch(err => {
+        console.log(err.response)
+        showMessage({ message:'Error', description:'Error Logging in', type:'danger' })
+        dispatch({
+            type:ERRORS,
+            error:'Errors Logging in'
+        })
+    })
+}
+
 
 export const setUserInfo = info => async (dispatch) => {
     dispatch({
@@ -107,6 +137,7 @@ export const setUserInfo = info => async (dispatch) => {
         info:info
     })
     storeItem(USER_INFO,info)
+    storeItem(MINING_FORCE, info.speed)
 }
 
 

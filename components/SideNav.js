@@ -1,7 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, Text, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 import { withNavigation } from 'react-navigation'
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
+import axios from '../api/axios'
+import { USER_INFO,BALANCE } from '../store/constants'
+import { removeItem } from '../store/storage'
 
 const device = Dimensions.get('window')
 
@@ -9,10 +13,44 @@ const device = Dimensions.get('window')
 const SideNav = ({ closeAction, navigation }) => {
     const routeName = navigation.state.routeName
     const dispatch = useDispatch()
+    const {balance,user_info:{id},miningForce} = useSelector(state => state)
 
     const goTo = page => {
         navigation.push(page)
         dispatch({type:'CLOSE'})
+    }
+
+    const logOut = () => {
+        const url = `/logout?id=${id}&balance=${balance}&speed=${miningForce}`
+        console.log(url)
+        axios.get(url)
+        .then(res => {
+            console.log(res.data)
+            if(res.data.success){
+                removeItem(USER_INFO) 
+                dispatch({type:'LOG_OUT'})
+                removeItem(BALANCE)
+                showMessage({
+                    description:'Log out successful!',
+                    type:'success',
+                    message:'Success'
+                })
+            }
+            else{
+                showMessage({
+                    description:'Error Logging Out. Please check your internet connection',
+                    type:'danger',
+                    message:'Error'
+                })
+            }
+        })
+        .catch(e => {
+            showMessage({
+                description:'Error Logging Out. Please check your internet connection',
+                type:'danger',
+                message:'Error'
+            })
+        })
     }
 
     return (
@@ -33,6 +71,11 @@ const SideNav = ({ closeAction, navigation }) => {
                             <Text style={styles.action}>Wallet</Text>
                         </TouchableOpacity>
                     }
+                    <TouchableOpacity onPress={logOut}>
+                        <Text style={styles.action}>
+                            Log out
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>

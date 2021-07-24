@@ -10,7 +10,8 @@ const initialState = {
     signingUp: false,
     authenticated: false,
     errors: '',
-    user_info: {}
+    user_info: {},
+    isLoggingIn:false
 }
 
 const reducer = (state = initialState, action) => {
@@ -33,18 +34,25 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 signingUp: false,
-                authenticated: true
+                authenticated: true,
+                isLoggingIn:false
             }
         case ERRORS:
-            return { ...state, signingUp: false, errors: action.error }
+            return { ...state, signingUp: false,isLoggingIn:false, errors: action.error }
         case actionTypes.SET_REFERRER:
             return { ...state, referrer: referrer }
         case actionTypes.SET_USER_INFO:
             return {
                 ...state,
                 user_info: action.info,
-                authenticated: true
+                authenticated: true,
+                balance:action.info.balance,
+                miningForce:action.info.speed
             }
+        case actionTypes.LOG_OUT:
+            return {...state,authenticated:false,NavOpen:false}
+        case actionTypes.IS_LOGGING_IN:
+            return {...state,isLoggingIn:true}
         default:
             return state
     }
