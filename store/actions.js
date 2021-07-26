@@ -106,7 +106,6 @@ export const login = payload => async (dispatch) =>{
     const {username,password} = payload
     axios.get(`/login?username=${username}&password=${password}`)
     .then(res => {
-        console.log(res.data)
         if(res.data.error){
             showMessage({ message:'Error', description:'Error Logging in', type:'danger' })
             dispatch({

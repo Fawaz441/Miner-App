@@ -26,7 +26,6 @@ const Navigator = () => {
             nextAppState === "active"
         ) {
             dispatch(loadBalance())
-            console.log("App has come to the foreground!");
         }
 
         appState.current = nextAppState;

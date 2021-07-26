@@ -24,9 +24,6 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
             storeItem(BALANCE,result)
         }
     }
-    console.log(`New Result , ${result}`);
-    console.log(speed)
-    console.log(balance)
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
@@ -59,7 +56,6 @@ class HomeScreen extends React.Component {
         const status = await BackgroundFetch.getStatusAsync();
         const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
         this.setState({status:status,isRegistered:isRegistered})
-        console.log('is Registered',isRegistered)
       };
 
     startFetchTask = async (start) => {
@@ -98,7 +94,7 @@ class HomeScreen extends React.Component {
         }
         this.intervalId = React.createRef(null)
         this.props.loadMiningForce()
-        // this.props.loadBalance()
+        this.props.loadBalance()
         this.getPayments()
         this.checkStatusAsync()
 
@@ -110,9 +106,7 @@ class HomeScreen extends React.Component {
         const {intervalId} = this;
         const { play } = this.state;
         if (play) {
-            const { balance } = this.props;
             clearInterval(intervalId.current)
-            storeItem(BALANCE, balance)
             this.setState({ play: false })
             await this.startFetchTask(false)
             
@@ -124,7 +118,6 @@ class HomeScreen extends React.Component {
                     var sum = parseFloat((Number(miningForce / 1000) + Number(balance)).toFixed(8))
                     if (sum > Number(balance)) {
                         this.props.setBalance(sum)
-                        storeItem(BALANCE, sum)
                     }
                 }
             }, 1000)

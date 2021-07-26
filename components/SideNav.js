@@ -22,10 +22,8 @@ const SideNav = ({ closeAction, navigation }) => {
 
     const logOut = () => {
         const url = `/logout?id=${id}&balance=${balance}&speed=${miningForce}`
-        console.log(url)
         axios.get(url)
         .then(res => {
-            console.log(res.data)
             if(res.data.success){
                 removeItem(USER_INFO) 
                 dispatch({type:'LOG_OUT'})
@@ -38,15 +36,21 @@ const SideNav = ({ closeAction, navigation }) => {
             }
             else{
                 showMessage({
-                    description:'Error Logging Out. Please check your internet connection',
+                    description:'Error Logging Out',
                     type:'danger',
                     message:'Error'
                 })
+                removeItem(USER_INFO) 
+                dispatch({type:'LOG_OUT'})
+                removeItem(BALANCE)
             }
         })
         .catch(e => {
+            removeItem(USER_INFO) 
+            dispatch({type:'LOG_OUT'})
+            removeItem(BALANCE)
             showMessage({
-                description:'Error Logging Out. Please check your internet connection',
+                description:'Error Logging Out.',
                 type:'danger',
                 message:'Error'
             })

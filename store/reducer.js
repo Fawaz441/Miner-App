@@ -1,12 +1,13 @@
 import * as actionTypes from './actionTypes'
-import { ERRORS } from './constants'
+import { ERRORS,BALANCE } from './constants'
+import { storeItem } from './storage'
 
 const initialState = {
     NavOpen: false,
     balance: 0.000001,
     referralCode: '',
     isNewUser: true,
-    miningForce: 0.00005,
+    miningForce: 0.00000,
     signingUp: false,
     authenticated: false,
     errors: '',
@@ -21,6 +22,7 @@ const reducer = (state = initialState, action) => {
         case "CLOSE":
             return { ...state, NavOpen: false }
         case "SET_BALANCE":
+            storeItem(BALANCE, action.balance)
             return { ...state, balance: action.balance }
         case 'SET_MINING_FORCE':
             return { ...state, miningForce: action.miningForce }

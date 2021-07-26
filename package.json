@@ -36,7 +36,9 @@
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "expo-task-manager": "~9.2.2",
-    "expo-background-fetch": "~9.2.2"
+    "expo-background-fetch": "~9.2.2",
+    "expo-ads-admob": "~10.1.2",
+    "expo-image-picker": "~10.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

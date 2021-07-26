@@ -22,6 +22,12 @@
         "UIBackgroundModes": [
           "location",
           "fetch"
+        ],
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "cstr6suwn9.skadnetwork"
+          }
         ]
       }
     },
@@ -30,7 +36,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff00"
       },
-      "package": "com.fawaz441.miner"
+      "package": "com.fawaz441.miner",
+      "permissions": [
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK"
+      ],
+      "config":{
+        "googleMobileAdsAppId":"ca-app-pub-9917840165084516~3130013764"
+      }
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -38,7 +51,9 @@
     "description": "",
     "plugins": [
       "expo-task-manager",
-      "expo-background-fetch"
+      "expo-background-fetch",
+      "expo-ads-admob",
+      "expo-image-picker"
     ]
   }
 }
